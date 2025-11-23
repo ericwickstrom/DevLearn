@@ -610,6 +610,312 @@ export const questionSets = {
 			question: 'What is SignalR?',
 			answer: 'SignalR enables real-time, bi-directional communication between server and clients. Uses WebSockets when available, falls back to long polling. Create Hub class with methods clients can call. Clients subscribe to receive server messages. Use for chat, notifications, live updates.'
 		}
+	],
+	'.NET Advanced (Mid-Level)': [
+		{
+			category: 'Advanced C#',
+			question: 'Explain the difference between IEnumerable and IQueryable.',
+			answer: 'IEnumerable: for in-memory collections, executes on client, uses LINQ-to-Objects. IQueryable: for remote data sources (databases), builds expression trees, executes on server (SQL), allows filtering before loading. Use IQueryable for database queries to avoid loading entire dataset.'
+		},
+		{
+			category: 'Advanced C#',
+			question: 'What are expression trees and when would you use them?',
+			answer: 'Expression trees represent code as data structures. Used by LINQ providers (EF Core) to translate C# to SQL. Can build/analyze/modify code at runtime. Create with Expression.Lambda<>. Use for dynamic query building, custom LINQ providers, ORM implementations.'
+		},
+		{
+			category: 'Advanced C#',
+			question: 'What is reflection and what are its performance implications?',
+			answer: 'Reflection inspects metadata at runtime (types, methods, properties). Use for: serialization, DI containers, attribute-based programming. Performance: slow due to dynamic lookups, avoid in hot paths. Cache Type/MethodInfo objects. Consider source generators (C# 9+) as alternative.'
+		},
+		{
+			category: 'Advanced C#',
+			question: 'Explain the dispose pattern and IDisposable.',
+			answer: 'IDisposable releases unmanaged resources (files, DB connections, sockets). Implement Dispose() method, use "using" statement for automatic disposal. Dispose pattern: public Dispose() calls protected Dispose(bool), GC.SuppressFinalize, finalizer as backup. Async: use IAsyncDisposable with DisposeAsync().'
+		},
+		{
+			category: 'Advanced C#',
+			question: 'What is the difference between Span<T> and Memory<T>?',
+			answer: 'Span<T>: stack-only ref struct, zero-allocation array slicing, ultra-fast, can\'t be stored in heap/async. Memory<T>: heap-allocated, works with async, wraps arrays/strings. Use Span for sync hot paths, Memory for async. Both avoid allocations for subranges.'
+		},
+		{
+			category: 'Concurrency',
+			question: 'What is the difference between lock, Monitor, and Semaphore?',
+			answer: 'lock (syntactic sugar for Monitor): ensures single thread access to critical section. Monitor: explicit Enter/Exit, supports timeouts/TryEnter. Semaphore: limits N concurrent threads (not just one). Use lock for simple exclusion, SemaphoreSlim for limiting concurrent operations.'
+		},
+		{
+			category: 'Concurrency',
+			question: 'What is a race condition and how do you prevent it?',
+			answer: 'Race condition: outcome depends on thread execution timing. Causes data corruption. Prevent with: locks (mutual exclusion), Interlocked operations (atomic), concurrent collections (ConcurrentDictionary), immutable data, actor model. Always protect shared mutable state.'
+		},
+		{
+			category: 'Concurrency',
+			question: 'Explain the difference between Task.Run and Task.Factory.StartNew.',
+			answer: 'Task.Run: simple, uses default TaskScheduler, good defaults (DenyChildAttach). Task.Factory.StartNew: more options (TaskScheduler, CreationOptions, state), can return Task<Task<T>> (confusing). Prefer Task.Run unless need advanced scenarios like custom scheduler.'
+		},
+		{
+			category: 'Concurrency',
+			question: 'What is async/await state machine and how does it work?',
+			answer: 'Compiler transforms async method into state machine. Each await becomes a state. Method returns immediately with Task. On await, captures context, registers continuation. When awaited task completes, continuation resumes. ConfigureAwait(false) avoids capturing context (better performance for libraries).'
+		},
+		{
+			category: 'Memory Management',
+			question: 'What are generations in GC and why do they matter?',
+			answer: 'Gen 0: new objects, collected frequently. Gen 1: survived one collection, medium frequency. Gen 2: long-lived, rare collection (expensive). LOH (Large Object Heap): >85KB objects, collected with Gen 2. Optimize by: keeping objects short-lived or very long-lived, avoiding mid-life crisis.'
+		},
+		{
+			category: 'Memory Management',
+			question: 'What is object pooling and when should you use it?',
+			answer: 'Object pooling reuses objects instead of creating new ones. Reduces GC pressure, improves performance. Use ArrayPool<T>, ObjectPool<T>. Good for: frequent allocations of expensive objects (large arrays, network buffers). Trade-off: memory held longer. Must reset state before returning to pool.'
+		},
+		{
+			category: 'Memory Management',
+			question: 'Explain memory leaks in .NET and how to detect them.',
+			answer: 'Leaks: objects not collected despite being unreachable. Causes: event handlers not unsubscribed, static references, IDisposable not called, circular references with external resources. Detect with: dotMemory, PerfView, diagnostic dumps. Look for growing Gen 2 heap.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'What is the N+1 query problem and how do you solve it?',
+			answer: 'N+1: loading collection executes 1 query for parent + N queries for children. Example: foreach(user) load user.Orders. Solutions: eager loading (.Include()), explicit loading (.Load()), select new (projection), batch queries. Always check SQL generated with logging.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'What are owned entities and when would you use them?',
+			answer: 'Owned entities are value objects that don\'t have identity, always accessed through owner. Stored in same table (default) or separate table. Use OwnsOne/OwnsMany. Good for: addresses, money values, complex value objects. Alternative to separate entity with FK.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'Explain change tracking in EF Core and how to optimize it.',
+			answer: 'EF tracks entity changes for SaveChanges. Methods: snapshot (default), notification proxies. Optimize: use AsNoTracking() for read-only queries (30-40% faster), detach entities not needed, use raw SQL for bulk operations, avoid loading just to delete.'
+		},
+		{
+			category: 'Security',
+			question: 'What is SQL injection and how do you prevent it?',
+			answer: 'SQL injection: attacker inserts malicious SQL via input. Prevention: parameterized queries (EF, Dapper), stored procedures, input validation, least privilege DB user. Never concatenate user input into SQL. Use FromSqlInterpolated with parameters in EF Core.'
+		},
+		{
+			category: 'Security',
+			question: 'Explain the difference between Authentication and Authorization.',
+			answer: 'Authentication: verifies identity (who you are) - login, JWT, cookies. Authorization: checks permissions (what you can do) - [Authorize(Roles="Admin")], claims, policies. Auth happens first, then authz. Use claims-based auth for flexible permissions.'
+		},
+		{
+			category: 'Security',
+			question: 'What are claims in ASP.NET Core authentication?',
+			answer: 'Claims are key-value pairs representing user info (name, email, role, permissions). Part of ClaimsIdentity/ClaimsPrincipal. Stored in JWT or cookie. Use for: role-based authz, policy-based authz, custom permissions. Access via User.Claims in controllers.'
+		},
+		{
+			category: 'Microservices',
+			question: 'What is eventual consistency in microservices?',
+			answer: 'Eventual consistency: data across services becomes consistent over time, not immediately. Use when strong consistency too expensive/impossible. Implement with: message queues, saga pattern, event sourcing. Trade-off: complexity, stale reads. Good for: order processing, inventory updates.'
+		},
+		{
+			category: 'Microservices',
+			question: 'What is the Saga pattern?',
+			answer: 'Saga manages distributed transactions as series of local transactions. Two types: Choreography (events, decentralized), Orchestration (coordinator service). Each step has compensating action for rollback. Use when can\'t use 2PC. Good for: order fulfillment, booking systems.'
+		}
+	],
+	'Architecture & Patterns (Mid-Level)': [
+		{
+			category: 'Design Patterns',
+			question: 'Explain the SOLID principles.',
+			answer: 'S: Single Responsibility - one reason to change. O: Open/Closed - open for extension, closed for modification. L: Liskov Substitution - subclasses replaceable. I: Interface Segregation - many specific interfaces > one general. D: Dependency Inversion - depend on abstractions, not concrete classes.'
+		},
+		{
+			category: 'Design Patterns',
+			question: 'What is the Repository pattern and its pros/cons?',
+			answer: 'Repo abstracts data access, provides collection-like interface. Pros: testability, swap data sources, centralized queries. Cons: can become bloated, may leak abstractions, might duplicate EF functionality. Use when: multiple data sources, need abstraction layer, DDD.'
+		},
+		{
+			category: 'Design Patterns',
+			question: 'Explain the Unit of Work pattern.',
+			answer: 'UoW maintains list of changes, commits all at once. In EF Core, DbContext is UoW. Tracks inserts/updates/deletes, writes in single transaction on SaveChanges. Benefits: consistency, transaction management. Often combined with Repository pattern.'
+		},
+		{
+			category: 'Design Patterns',
+			question: 'What is the Decorator pattern and when would you use it?',
+			answer: 'Decorator adds behavior to objects dynamically without changing class. Wraps object, implements same interface, delegates to wrapped. Use for: logging, caching, retry logic, cross-cutting concerns. Example: ICacheService wrapping IDataService. Better than inheritance for composition.'
+		},
+		{
+			category: 'Design Patterns',
+			question: 'Explain the Strategy pattern.',
+			answer: 'Strategy defines family of algorithms, makes them interchangeable. Client chooses strategy at runtime. Interface for strategies, concrete implementations. Use for: payment methods, sorting algorithms, validation rules. Avoids switch/if statements, follows Open/Closed.'
+		},
+		{
+			category: 'Architecture',
+			question: 'What is Clean Architecture?',
+			answer: 'Clean Architecture: Domain (entities) at center, surrounded by Application (use cases), Infrastructure (data access), Presentation (API/UI). Dependencies point inward. Benefits: testability, independence from frameworks/UI/DB. Similar to Onion/Hexagonal architecture.'
+		},
+		{
+			category: 'Architecture',
+			question: 'Explain CQRS pattern.',
+			answer: 'CQRS (Command Query Responsibility Segregation): separate models for reads/writes. Commands change state (write), Queries return data (read). Benefits: optimize separately, different data stores, complex domain logic. Use with: event sourcing, high-scale systems, DDD.'
+		},
+		{
+			category: 'Architecture',
+			question: 'What is Domain-Driven Design (DDD)?',
+			answer: 'DDD focuses on business domain complexity. Concepts: Entities (identity), Value Objects (equality by value), Aggregates (consistency boundary), Repositories, Domain Services, Ubiquitous Language. Benefits: models match business, maintainable. Use for complex domains, not CRUD apps.'
+		},
+		{
+			category: 'Architecture',
+			question: 'What are bounded contexts in DDD?',
+			answer: 'Bounded context: explicit boundary where domain model is valid. Each context has own ubiquitous language, can have different models for same concept. Prevents model pollution. Maps to microservices well. Context mapping defines relationships between contexts.'
+		},
+		{
+			category: 'Architecture',
+			question: 'Explain the difference between Monolith and Microservices.',
+			answer: 'Monolith: single deployable unit, shared database, simple deployment, easier to develop initially. Microservices: independent services, own databases, complex deployment, scaling flexibility. Trade-offs: complexity vs flexibility. Start monolith, split when needed, not vice versa.'
+		},
+		{
+			category: 'API Design',
+			question: 'What is idempotency and why is it important?',
+			answer: 'Idempotent: multiple identical requests have same effect as one. GET, PUT, DELETE are idempotent. POST isn\'t. Important for: retry logic, network failures, distributed systems. Implement with: idempotency keys, checking existing records before creating.'
+		},
+		{
+			category: 'API Design',
+			question: 'Explain API pagination strategies.',
+			answer: 'Offset-based: skip/take, simple but slow for large offsets. Cursor-based: unique key (ID/timestamp), fast, consistent results. Keyset: WHERE id > lastId, efficient. Page-based: page number, user-friendly. Choose based on: data volatility, performance needs, UX requirements.'
+		},
+		{
+			category: 'API Design',
+			question: 'What is HATEOAS?',
+			answer: 'HATEOAS (Hypermedia As The Engine Of Application State): REST principle where responses include links to related actions. Client discovers actions dynamically. Pros: evolvability, self-documenting. Cons: complex, verbose. Rarely implemented fully due to complexity vs benefit.'
+		},
+		{
+			category: 'Messaging',
+			question: 'What is the difference between message queues and event buses?',
+			answer: 'Message Queue: point-to-point, one consumer per message, work distribution, guaranteed delivery. Event Bus: pub/sub, multiple subscribers, event notification, fire-and-forget. Use queues for: commands, tasks. Use event bus for: notifications, events. Examples: RabbitMQ (both), MassTransit.'
+		},
+		{
+			category: 'Messaging',
+			question: 'What is event sourcing?',
+			answer: 'Event sourcing: store state as sequence of events instead of current state. Rebuild state by replaying events. Benefits: audit trail, time travel, event replay. Drawbacks: complexity, eventual consistency. Use with CQRS. Good for: financial systems, audit requirements.'
+		},
+		{
+			category: 'Resilience',
+			question: 'What is the Circuit Breaker pattern?',
+			answer: 'Circuit Breaker prevents cascading failures. States: Closed (normal), Open (failing, reject calls), Half-Open (test recovery). After N failures, opens circuit. After timeout, tries again. Use Polly library. Protects services from failing dependencies.'
+		},
+		{
+			category: 'Resilience',
+			question: 'Explain retry and backoff strategies.',
+			answer: 'Retry: attempt operation again after failure. Strategies: fixed delay, exponential backoff (2x each time), jitter (randomness). Use for: transient failures (network, timeout). Don\'t retry: validation errors, 404s. Polly library provides retry policies with backoff.'
+		},
+		{
+			category: 'Testing',
+			question: 'What is the Test Pyramid?',
+			answer: 'Test Pyramid: many unit tests (fast, isolated), fewer integration tests (slower, test combinations), few E2E tests (slowest, test full system). Ratio roughly 70/20/10. Unit tests give fast feedback, E2E tests verify end-to-end flows.'
+		},
+		{
+			category: 'Testing',
+			question: 'What is Test-Driven Development (TDD)?',
+			answer: 'TDD: write test first (red), write minimum code to pass (green), refactor. Benefits: better design, test coverage, confidence. Challenges: learning curve, slower initially. Good for: complex logic, stable requirements. Three laws: no code without failing test.'
+		},
+		{
+			category: 'Testing',
+			question: 'Explain the difference between mocks, stubs, and fakes.',
+			answer: 'Mock: verifies behavior (method calls), throws if unexpected call. Stub: provides canned responses, no verification. Fake: working implementation (in-memory DB). Mock = behavior verification, Stub = state verification. Use Moq/NSubstitute for mocks/stubs.'
+		}
+	],
+	'Performance & Optimization (Mid-Level)': [
+		{
+			category: 'Performance',
+			question: 'What is the difference between synchronous and asynchronous I/O?',
+			answer: 'Sync I/O: thread blocks waiting for operation. Async I/O: thread released, continues when operation completes. Async drastically improves scalability for I/O-bound work (DB, HTTP, files). Use async/await for all I/O operations. CPU-bound work benefits less.'
+		},
+		{
+			category: 'Performance',
+			question: 'How do you profile a .NET application?',
+			answer: 'Tools: dotnet-trace (CPU sampling), dotnet-counters (metrics), dotnet-dump (memory), PerfView, JetBrains dotMemory/dotTrace. Look for: hot paths, allocations, GC pauses, lock contention. Visual Studio Diagnostic Tools. Always profile production-like data/load.'
+		},
+		{
+			category: 'Performance',
+			question: 'What are the benefits of using struct over class?',
+			answer: 'Struct: value type, stack-allocated (or inline in parent), no GC pressure, copied by value. Class: reference type, heap-allocated, GC. Use struct for: small (<16 bytes), immutable, short-lived data. Overuse causes performance issues (large copies). Examples: Point, DateTime.'
+		},
+		{
+			category: 'Performance',
+			question: 'Explain string concatenation performance issues.',
+			answer: 'Strings are immutable - each concatenation creates new string. Loop concatenation = O(n²). Solutions: StringBuilder (mutable buffer), string.Join, string.Concat, string interpolation (compile-time optimization), Span<char>. Use StringBuilder for loops, interpolation for simple cases.'
+		},
+		{
+			category: 'Performance',
+			question: 'What is lazy loading and when should you use it?',
+			answer: 'Lazy<T> defers initialization until first access. Thread-safe by default. Use for: expensive objects, rarely used features, circular dependencies. In EF Core, lazy loading loads related entities on access (avoid N+1). Alternative: explicit loading, eager loading (.Include).'
+		},
+		{
+			category: 'Caching',
+			question: 'What is the difference between IMemoryCache and IDistributedCache?',
+			answer: 'IMemoryCache: in-process, fast, lost on restart/scale out. IDistributedCache: external (Redis, SQL), shared across servers, survives restarts. Use IMemoryCache for single server. Use IDistributedCache for: multiple servers, session state, persistent cache.'
+		},
+		{
+			category: 'Caching',
+			question: 'Explain cache eviction policies.',
+			answer: 'LRU (Least Recently Used): removes least recently accessed. LFU (Least Frequently Used): removes least frequently accessed. TTL (Time To Live): expires after time. Size-based: removes when size limit hit. IMemoryCache uses size + sliding/absolute expiration. Choose based on access patterns.'
+		},
+		{
+			category: 'Caching',
+			question: 'What is the cache-aside pattern?',
+			answer: 'Cache-aside: application manages cache. Read: check cache, if miss load from DB and cache. Write: update DB, invalidate cache. Simple, most common. Alternatives: write-through (write to cache+DB), write-behind (write cache, async to DB), read-through (cache loads on miss).'
+		},
+		{
+			category: 'Database',
+			question: 'What are database indexes and how do they impact performance?',
+			answer: 'Index: data structure for fast lookups. Types: clustered (table order), non-clustered (separate structure), unique, composite. Speed reads, slow writes. Over-indexing wastes space, slows inserts/updates. Index WHERE/JOIN/ORDER BY columns. Analyze query plans to identify missing indexes.'
+		},
+		{
+			category: 'Database',
+			question: 'Explain the difference between optimistic and pessimistic locking.',
+			answer: 'Optimistic: no lock, check version on update, retry if changed (RowVersion/Timestamp). Low contention, better performance. Pessimistic: lock row during transaction, prevents other updates, can cause deadlocks. High contention. Use optimistic for web apps, pessimistic for critical updates.'
+		},
+		{
+			category: 'Database',
+			question: 'What is a database deadlock and how do you prevent it?',
+			answer: 'Deadlock: two transactions wait for each other\'s locks. DB kills one transaction. Prevent: access resources in same order, keep transactions short, use appropriate isolation level, use row versioning (READ_COMMITTED_SNAPSHOT). Retry with exponential backoff on deadlock detection.'
+		},
+		{
+			category: 'HTTP',
+			question: 'What is HTTP/2 and how does it improve performance?',
+			answer: 'HTTP/2: binary protocol (vs text), multiplexing (multiple requests over one connection), server push, header compression. Benefits: faster load times, fewer connections, reduced latency. Enabled by default in .NET Core 3.0+. Use HTTPS (required for HTTP/2).'
+		},
+		{
+			category: 'HTTP',
+			question: 'Explain connection pooling in HttpClient.',
+			answer: 'HttpClient reuses TCP connections via pooling. Don\'t dispose per-request (socket exhaustion). Use IHttpClientFactory (manages lifetime, pooling, handles DNS changes). Named/typed clients. Polly integration for retries. Default pool timeout 2 minutes (handles DNS rotation).'
+		},
+		{
+			category: 'Serialization',
+			question: 'What is the difference between JSON.NET and System.Text.Json?',
+			answer: 'System.Text.Json: default in .NET Core 3.0+, faster, less memory, async support. JSON.NET (Newtonsoft.Json): more features, slower. STJ missing: DateOnly (until .NET 6), some complex scenarios. Use STJ unless need specific Newtonsoft features.'
+		},
+		{
+			category: 'Serialization',
+			question: 'How do you optimize JSON serialization performance?',
+			answer: 'Use System.Text.Json, source generators (compile-time reflection), JsonSerializerOptions (reuse, don\'t create per call), streaming APIs for large JSON, ignore null values, use camelCase naming (smaller payloads), consider protobuf/MessagePack for internal APIs.'
+		},
+		{
+			category: 'Monitoring',
+			question: 'What metrics should you monitor in production?',
+			answer: 'Application: request rate, response time, error rate, exception count. System: CPU, memory, disk I/O, GC metrics. Database: query time, connection pool, deadlocks. Custom: business metrics (orders/sec). Use Application Insights, Prometheus, or ELK stack. Set up alerts for anomalies.'
+		},
+		{
+			category: 'Monitoring',
+			question: 'What is distributed tracing?',
+			answer: 'Distributed tracing: tracks request across multiple services. Correlates logs/spans via trace ID. Shows bottlenecks, failures. Tools: Application Insights, Jaeger, Zipkin. Use Activity API in .NET. Essential for microservices debugging. W3C TraceContext standard for interoperability.'
+		},
+		{
+			category: 'Memory',
+			question: 'What is the difference between ArrayPool and stackalloc?',
+			answer: 'ArrayPool: rents/returns arrays from pool, heap-allocated, any size, no size limit. stackalloc: stack-allocated, ultra-fast, limited size (~1KB safe), can\'t escape method. Use stackalloc for small buffers in hot paths, ArrayPool for larger reusable buffers.'
+		},
+		{
+			category: 'Threading',
+			question: 'What is ThreadPool and how does it work?',
+			answer: 'ThreadPool: reusable threads for work items. Avoids thread creation overhead. Used by Task.Run, async/await. Self-tuning: adjusts thread count based on load. Don\'t block ThreadPool threads (use Task.Run for CPU work, async for I/O). Minimum threads per core, maximum thousands.'
+		},
+		{
+			category: 'Best Practices',
+			question: 'What is the difference between IDisposable and finalizer?',
+			answer: 'IDisposable: deterministic cleanup, call Dispose() or use "using". Finalizer (~Class): non-deterministic, called by GC, promotes object to Gen 2 (expensive). Implement both: Dispose for managed+unmanaged, finalizer as backup for unmanaged only. GC.SuppressFinalize in Dispose.'
+		}
 	]
 }
 
