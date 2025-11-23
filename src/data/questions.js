@@ -916,6 +916,312 @@ export const questionSets = {
 			question: 'What is the difference between IDisposable and finalizer?',
 			answer: 'IDisposable: deterministic cleanup, call Dispose() or use "using". Finalizer (~Class): non-deterministic, called by GC, promotes object to Gen 2 (expensive). Implement both: Dispose for managed+unmanaged, finalizer as backup for unmanaged only. GC.SuppressFinalize in Dispose.'
 		}
+	],
+	'.NET Expert (Senior-Level)': [
+		{
+			category: 'Runtime Internals',
+			question: 'Explain how the JIT compiler works and its optimization strategies.',
+			answer: 'JIT compiles IL to native code at runtime. Tiered compilation: Tier 0 (quick, unoptimized startup), Tier 1 (optimized after profiling hot paths). Optimizations: inlining, dead code elimination, loop unrolling, register allocation. ReadyToRun for ahead-of-time compilation. Profile-guided optimization (PGO) in .NET 6+.'
+		},
+		{
+			category: 'Runtime Internals',
+			question: 'What are ValueTask and ValueTask<T> and when should you use them?',
+			answer: 'ValueTask is struct-based async return type. Avoids Task allocation when result is synchronously available or uses pooling. Use for: hot paths with common sync completion, reducing allocations. Don\'t: await multiple times, use with Task.WhenAll, store for later. Prefer Task unless profiling shows benefit.'
+		},
+		{
+			category: 'Runtime Internals',
+			question: 'Explain the difference between Server GC and Workstation GC.',
+			answer: 'Workstation GC: single thread, optimized for low latency, UI apps. Server GC: multiple threads (one per logical CPU), higher throughput, parallelized collections, more memory. Configure in .csproj: <ServerGarbageCollection>true</ServerGarbageCollection>. Use Server GC for web apps/services.'
+		},
+		{
+			category: 'Runtime Internals',
+			question: 'What is the Large Object Heap and how does it differ from regular heap?',
+			answer: 'LOH stores objects ≥85KB. Not compacted by default (fragmentation), collected only in Gen 2 (expensive). .NET 4.5.1+ can enable compaction with GCSettings.LargeObjectHeapCompactionMode. Avoid: allocate smaller objects, use ArrayPool, stream large data. Monitor LOH fragmentation in production.'
+		},
+		{
+			category: 'Advanced Concurrency',
+			question: 'Explain channels in System.Threading.Channels and their use cases.',
+			answer: 'Channels provide producer/consumer patterns with backpressure. Types: Bounded (limit capacity, blocks producer), Unbounded. Better than BlockingCollection: async, better performance. Use for: async pipelines, actor pattern, work queues. Alternative to ConcurrentQueue + SemaphoreSlim.'
+		},
+		{
+			category: 'Advanced Concurrency',
+			question: 'What is the SemaphoreSlim difference from Semaphore and when to use each?',
+			answer: 'SemaphoreSlim: lightweight, async support (WaitAsync), no cross-process. Semaphore: heavyweight kernel object, cross-process sync. Use SemaphoreSlim for: limiting concurrent operations, async/await scenarios, same process. Use Semaphore only when need cross-process synchronization.'
+		},
+		{
+			category: 'Advanced Concurrency',
+			question: 'Explain async/await and SynchronizationContext.',
+			answer: 'SynchronizationContext captures execution context for resuming after await. UI apps: resumes on UI thread. ASP.NET Core: no context (performance). ConfigureAwait(false) prevents context capture. Library code should always use ConfigureAwait(false) to avoid deadlocks and improve performance.'
+		},
+		{
+			category: 'Advanced Concurrency',
+			question: 'What are the risks of async void and when is it acceptable?',
+			answer: 'async void: can\'t await, unhandled exceptions crash app, no completion signal. Only acceptable for: event handlers (required by signature). Always use async Task otherwise. For fire-and-forget: use Task.Run, background service, or explicitly handle exceptions.'
+		},
+		{
+			category: 'Performance Tuning',
+			question: 'Explain zero-allocation techniques in .NET.',
+			answer: 'Techniques: Span<T>/Memory<T> (slice without allocating), ArrayPool (reuse arrays), ValueTask (avoid Task allocation), stackalloc (stack arrays), string.Create (avoid intermediate strings), struct over class, ref returns/locals. Measure with BenchmarkDotNet. Trade-off: complexity vs performance.'
+		},
+		{
+			category: 'Performance Tuning',
+			question: 'What is BenchmarkDotNet and how do you use it effectively?',
+			answer: 'BenchmarkDotNet provides reliable microbenchmarks. Features: warmup, multiple iterations, statistical analysis, memory diagnostics. Best practices: [MemoryDiagnoser], Release mode, no debugger, test on prod-like hardware, compare alternatives. Avoid: premature optimization, optimizing without measuring.'
+		},
+		{
+			category: 'Performance Tuning',
+			question: 'Explain ref returns, ref locals, and ref structs.',
+			answer: 'ref return: return reference to value, not copy. ref local: variable that references another variable. ref struct: stack-only type (like Span<T>), can\'t be on heap/boxed. Use for: zero-copy operations, high-performance scenarios. Example: Span<T>, Memory<T> use ref structs.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'Explain compiled queries and when to use them.',
+			answer: 'Compiled queries cache LINQ expression tree translation, avoiding repeated parsing. Use Expression.Compile or EF.CompileAsyncQuery. Best for: frequently-executed queries with parameters. Gains less significant in EF Core 7+ (automatic compilation cache). Still useful for very hot paths with high query volume.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'What is split queries in EF Core and when should you use it?',
+			answer: 'Split queries execute separate SQL queries for each Include. Avoids Cartesian explosion with multiple collections. Use AsSplitQuery() or configure globally. Trade-off: more round-trips vs less data duplication. Use for: multiple collections, large datasets. Default single query for: one-to-one, simple queries.'
+		},
+		{
+			category: 'Advanced EF Core',
+			question: 'Explain interceptors in EF Core.',
+			answer: 'Interceptors hook into EF lifecycle: command execution, connection, transaction. Implement IDbCommandInterceptor, IDbConnectionInterceptor. Use for: logging, query modification, multi-tenancy, encryption. Register in DbContextOptionsBuilder. Powerful but complex - use sparingly. Alternative: global query filters.'
+		},
+		{
+			category: 'Microservices Architecture',
+			question: 'Explain the difference between orchestration and choreography in microservices.',
+			answer: 'Orchestration: central coordinator directs interactions (workflow engine, saga orchestrator). Pro: centralized logic, easier debugging. Con: single point of failure, coupling. Choreography: services react to events independently. Pro: loose coupling, scalable. Con: harder to understand flow, no central view. Choose based on complexity.'
+		},
+		{
+			category: 'Microservices Architecture',
+			question: 'What is the Strangler Fig pattern?',
+			answer: 'Strangler Fig incrementally replaces monolith with microservices. Create facade, route requests to new or old system, gradually migrate features. Benefits: lower risk, continuous delivery, no big-bang rewrite. Use anti-corruption layer for translation. Named after fig that grows around and replaces host tree.'
+		},
+		{
+			category: 'Microservices Architecture',
+			question: 'Explain the Outbox pattern.',
+			answer: 'Outbox pattern ensures reliable message publishing. Write business data + message to database in same transaction, background process publishes from outbox table. Guarantees at-least-once delivery. Alternative: transaction log tailing (CDC). Solves dual-write problem. Implement with: polling, Change Data Capture, or dedicated libraries.'
+		},
+		{
+			category: 'Security',
+			question: 'Explain defense in depth for web applications.',
+			answer: 'Defense in depth: multiple security layers. Layers: HTTPS, authentication, authorization, input validation, output encoding, rate limiting, CORS, CSP headers, secrets management, least privilege, WAF, monitoring. Each layer compensates for others. No single point of failure. Security is cumulative.'
+		},
+		{
+			category: 'Security',
+			question: 'What is OWASP Top 10 and how do you mitigate them in .NET?',
+			answer: 'OWASP Top 10: A01 Broken Access Control (use [Authorize], principle of least privilege), A02 Crypto Failures (use Data Protection API), A03 Injection (parameterized queries), A04 Insecure Design (threat modeling), A05 Security Misconfiguration (disable debug, update), A06 Vulnerable Components (audit NuGet), A07 Auth Failures (MFA), A08 Data Integrity Failures (validate inputs), A09 Logging Failures (monitor), A10 SSRF (validate URLs).'
+		},
+		{
+			category: 'Distributed Systems',
+			question: 'Explain the Two-Phase Commit protocol and its limitations.',
+			answer: '2PC: prepare phase (can you commit?), commit phase (commit now). Coordinator tracks participants. Problems: blocking (coordinator fails), availability trade-off (CAP), performance. Avoided in microservices. Alternatives: Saga pattern, eventual consistency, event sourcing. Use only when ACID required across distributed resources.'
+		}
+	],
+	'System Design & Architecture (Senior-Level)': [
+		{
+			category: 'Scalability',
+			question: 'Design a highly scalable notification system.',
+			answer: 'Components: API gateway, message queue (Kafka/RabbitMQ), worker services, notification providers (email/SMS/push), status tracking, retry logic. Scale: horizontal workers, queue partitioning, rate limiting per provider, bulk processing, circuit breakers. Database: user preferences, delivery status. Monitoring: delivery rate, failures, latency.'
+		},
+		{
+			category: 'Scalability',
+			question: 'How would you design a rate limiting system?',
+			answer: 'Algorithms: Token bucket (smooth rate), Fixed window (simple), Sliding window (accurate), Leaky bucket (constant rate). Storage: Redis (distributed), in-memory (single server). Consider: per-user, per-IP, per-API. Implementation: middleware, API gateway (rate limit headers). Handle: 429 status, exponential backoff, burst allowance.'
+		},
+		{
+			category: 'Scalability',
+			question: 'Explain horizontal vs vertical database scaling strategies.',
+			answer: 'Vertical: bigger server (CPU, RAM, storage). Limits: hardware ceiling, single point of failure, downtime. Horizontal: sharding (partition data), read replicas (scale reads), CQRS (separate read/write). Challenges: joins across shards, rebalancing, distributed transactions. Use: vertical first (simple), horizontal when needed (scale, availability).'
+		},
+		{
+			category: 'Data Architecture',
+			question: 'Design a multi-tenant SaaS database architecture.',
+			answer: 'Approaches: 1) Shared DB, shared schema (discriminator, cheapest, noisy neighbor), 2) Shared DB, separate schemas (isolation, migration complexity), 3) Separate DBs (best isolation, expensive, complex). Choose based on: tenant size, compliance, cost. Include: row-level security, tenant context, backup strategy, data migration path.'
+		},
+		{
+			category: 'Data Architecture',
+			question: 'Explain polyglot persistence and when to use it.',
+			answer: 'Polyglot persistence: different data stores for different needs. SQL (ACID, relational), NoSQL (scale, flexibility), Redis (cache, session), Elasticsearch (search), Neo4j (graphs). Benefits: optimize per use case. Challenges: complexity, consistency, operations. Use when: different access patterns, not premature optimization.'
+		},
+		{
+			category: 'Data Architecture',
+			question: 'How do you handle database schema evolution in microservices?',
+			answer: 'Strategies: expand-contract (add new, dual write, remove old), database per service (independent evolution), versioned APIs (backward compatibility), event-sourced (schema-less events). Migrations: automated (EF migrations), blue-green deployment, feature flags. Never: breaking changes, forced downtime. Test migrations on production-like data.'
+		},
+		{
+			category: 'Resilience',
+			question: 'Design a system for zero-downtime deployments.',
+			answer: 'Techniques: blue-green (two environments, switch traffic), rolling deployment (gradual instance update), canary (test on subset), feature flags (toggle features). Requirements: backward compatibility, stateless services, health checks, graceful shutdown, database migrations (expand-contract). Load balancer manages traffic. Automated rollback on errors.'
+		},
+		{
+			category: 'Resilience',
+			question: 'Explain the Bulkhead pattern.',
+			answer: 'Bulkhead isolates resources to prevent cascade failures. Like ship compartments - one breach doesn\'t sink ship. Implementation: separate connection pools per dependency, dedicated thread pools, rate limiting per client. Benefits: fault isolation, prevents resource exhaustion. Use: multiple critical dependencies. Polly provides bulkhead isolation.'
+		},
+		{
+			category: 'Resilience',
+			question: 'How do you implement graceful degradation?',
+			answer: 'Graceful degradation: reduce functionality when dependencies fail. Techniques: cached data (stale but available), default values, disabled features, read-only mode, queue for later. Circuit breaker opens, return cached/default. Example: recommendations service down, show trending instead. Monitor degraded state, alert for manual intervention.'
+		},
+		{
+			category: 'Event-Driven Architecture',
+			question: 'Compare event notification, event-carried state transfer, and event sourcing.',
+			answer: 'Event notification: minimal data (ID), receiver queries for details. Event-carried state transfer: full state in event, no query needed. Event sourcing: events are source of truth, rebuild state by replay. Choose based on: coupling (notification = loose), autonomy (state transfer = high), auditability (event sourcing = full).'
+		},
+		{
+			category: 'Event-Driven Architecture',
+			question: 'Design an event-driven order processing system.',
+			answer: 'Events: OrderCreated, PaymentProcessed, InventoryReserved, OrderShipped. Services: Order, Payment, Inventory, Shipping. Event store (Kafka/EventStore). Saga handles failures: compensating transactions. Projections for queries. Idempotency keys for duplicate prevention. Dead letter queue for failed events. Monitoring: event flow, processing time, failures.'
+		},
+		{
+			category: 'Event-Driven Architecture',
+			question: 'How do you handle event versioning?',
+			answer: 'Strategies: 1) Upcasting (convert old to new), 2) Multiple versions (handlers for each), 3) Weak schema (JSON, optional fields). Best practices: additive changes only, never remove fields, use event type + version, transformation layer, test old events against new code. Consider: event replay, long-term storage.'
+		},
+		{
+			category: 'API Gateway',
+			question: 'What are the responsibilities of an API Gateway?',
+			answer: 'Responsibilities: routing, authentication/authorization, rate limiting, request/response transformation, protocol translation (REST to gRPC), SSL termination, caching, logging, metrics. Benefits: client simplification, cross-cutting concerns. Challenges: single point of failure, complexity. Options: Azure API Management, Kong, YARP, Ocelot.'
+		},
+		{
+			category: 'API Gateway',
+			question: 'Explain the Backend for Frontend (BFF) pattern.',
+			answer: 'BFF: separate API gateway per client type (web, mobile, desktop). Benefits: tailored responses, optimized for client, independent evolution, security per client. Trade-offs: duplication, more services. Use when: very different client needs, team autonomy. Alternative: single gateway with versioning/feature flags.'
+		},
+		{
+			category: 'Service Mesh',
+			question: 'What is a service mesh and when do you need one?',
+			answer: 'Service mesh: infrastructure layer for service-to-service communication. Features: mTLS, observability, traffic management, circuit breaking, retries. Examples: Istio, Linkerd, Consul Connect. Need when: many microservices, polyglot, complex routing, security requirements. Trade-off: operational complexity. Start simple, add when proven need.'
+		},
+		{
+			category: 'Observability',
+			question: 'Design an observability strategy for microservices.',
+			answer: 'Three pillars: Logs (ELK, structured logging, correlation IDs), Metrics (Prometheus, RED/USE method), Traces (distributed tracing, OpenTelemetry). Dashboards: service health, business KPIs. Alerts: error rate, latency, saturation. SLO/SLI definition. Cost management. Sampling for scale. Unified observability platform (Datadog, New Relic).'
+		},
+		{
+			category: 'Observability',
+			question: 'Explain SLO, SLI, and SLA.',
+			answer: 'SLI (Service Level Indicator): metric (latency, error rate, throughput). SLO (Service Level Objective): target for SLI (99.9% requests < 200ms). SLA (Service Level Agreement): contract with consequences (refunds). SLO < SLA (error budget). Use for: prioritization (reliability vs features), incident response. Track: burn rate, error budget.'
+		},
+		{
+			category: 'Database Design',
+			question: 'Design a sharding strategy for a social media platform.',
+			answer: 'Shard key: user_id (consistent, balanced). Technique: consistent hashing (minimize rebalancing). Features: user profile (same shard as user), posts (user shard), followers (fan-out). Challenges: celebrity users (hot shard), cross-shard queries (aggregate service), rebalancing (virtual shards). Monitor: shard size, query patterns. Consistent hashing ring for routing.'
+		},
+		{
+			category: 'CAP Theorem',
+			question: 'Explain CAP theorem and practical implications.',
+			answer: 'CAP: Consistency, Availability, Partition tolerance - pick 2. Reality: partition tolerance required (networks fail). Choose: CP (consistency over availability, banking) or AP (availability over consistency, social media). Eventual consistency middle ground. Use: tunable consistency (Cassandra), compensation (Saga), conflict resolution (CRDTs).'
+		},
+		{
+			category: 'Trade-offs',
+			question: 'Explain architectural trade-offs between consistency and performance.',
+			answer: 'Strong consistency: slower (coordination), lower throughput, simpler reasoning. Eventual consistency: faster, higher throughput, complexity (conflicts, stale reads). Techniques: read replicas (AP), CQRS (separate models), caching (stale data), optimistic locking (retry on conflict). Choose based on: business requirements, scale, tolerable staleness.'
+		}
+	],
+	'Leadership & Best Practices (Senior-Level)': [
+		{
+			category: 'Code Review',
+			question: 'What should senior engineers focus on during code reviews?',
+			answer: 'Focus: architecture/design (not just syntax), security vulnerabilities, performance implications, maintainability, testability, error handling, logging. Provide: context for suggestions, alternatives, learning opportunities. Avoid: nitpicking, personal preferences. Automate: formatting, linting. Goal: knowledge sharing, consistent quality, catching critical issues.'
+		},
+		{
+			category: 'Code Review',
+			question: 'How do you handle disagreements in code reviews?',
+			answer: 'Approach: assume good intent, explain reasoning (not just opinion), provide evidence (metrics, docs), discuss trade-offs, escalate if needed (tech lead). Acceptable: multiple valid solutions, style preferences (defer to team standards). Not acceptable: security issues, breaking changes, architectural violations. When in doubt, discuss synchronously.'
+		},
+		{
+			category: 'Technical Debt',
+			question: 'How do you quantify and prioritize technical debt?',
+			answer: 'Quantify: time to add features (velocity impact), bug frequency (quality impact), incident correlation, developer satisfaction. Prioritize: ROI (impact vs effort), business criticality, learning opportunities. Track: debt register, assign ownership, include in sprint planning. Balance: new features vs debt. Rule: boy scout principle (leave better than found).'
+		},
+		{
+			category: 'Technical Debt',
+			question: 'When is it acceptable to take on technical debt?',
+			answer: 'Acceptable: validated learning (MVP), time-sensitive opportunity, prototype, known and documented. Not acceptable: lack of knowledge, convenience, always "temporary". Requirements: explicit decision, documented, plan to address, not security/critical. Technical debt is not sloppiness - it\'s strategic trade-off.'
+		},
+		{
+			category: 'System Evolution',
+			question: 'How do you plan for system evolution and avoid premature optimization?',
+			answer: 'Principles: YAGNI (you aren\'t gonna need it), solve current problems, measure before optimizing, make it work/right/fast. Plan: extensibility points (interfaces, plugins), observability (find bottlenecks), feedback loops. Avoid: speculative features, complex abstractions, performance optimization without data. Refactor when needed, not "might need".'
+		},
+		{
+			category: 'System Evolution',
+			question: 'How do you approach legacy system modernization?',
+			answer: 'Strategy: Strangler Fig (incremental), anti-corruption layer, characterization tests (safety net), feature freeze old system, metrics-driven (prove improvement). Risks: big-bang rewrite (avoid), unknown dependencies, business disruption. Success factors: business alignment, incremental delivery, rollback plan, knowledge transfer. Budget: 20% modernization, 80% features.'
+		},
+		{
+			category: 'Incident Management',
+			question: 'What is your approach to incident response and post-mortems?',
+			answer: 'Incident: triage (severity), communicate (stakeholders), mitigate (quick fix), resolve (root cause). Post-mortem: blameless culture, timeline, root cause (5 whys), action items (owner, deadline). Share: learnings, improvements. Avoid: blame, surface-level fixes. Track: MTTR (mean time to recovery), incident frequency. Practice: chaos engineering, game days.'
+		},
+		{
+			category: 'Incident Management',
+			question: 'How do you balance moving fast with preventing outages?',
+			answer: 'Practices: automated testing, CI/CD, feature flags (kill switch), gradual rollout, observability, error budgets, SLOs, blameless culture. Accept: some failures inevitable, learn from them. Prevent: critical path redundancy, circuit breakers, graceful degradation. Culture: safe to fail, psychological safety, incident reviews. Balance: error budget (reliability vs velocity).'
+		},
+		{
+			category: 'Mentorship',
+			question: 'How do you effectively mentor junior engineers?',
+			answer: 'Approach: pair programming, code reviews (teaching moments), documentation, encourage questions, provide context (why not just what), assign challenging but achievable tasks. Techniques: Socratic method, explain trade-offs, share experiences. Avoid: doing work for them, perfectionism, assuming knowledge. Track: progress, feedback loops, career goals. Time investment: pays dividends.'
+		},
+		{
+			category: 'Mentorship',
+			question: 'How do you scale yourself as a senior engineer?',
+			answer: 'Scale through: documentation (knowledge sharing), automation (reduce toil), mentoring (multiply impact), architecture (enable others), code reviews (improve quality), pair programming. Delegate: not just tasks, decision-making. Empower: trust, context, autonomy. Avoid: bottleneck, hero culture, hoarding knowledge. Measure: team growth, not individual output.'
+		},
+		{
+			category: 'Architecture Decisions',
+			question: 'How do you document and communicate architecture decisions?',
+			answer: 'Use ADRs (Architecture Decision Records): context, decision, consequences, status (accepted/superseded). Include: alternatives considered, trade-offs, rationale. Store: version control, accessible. Present: diagrams (C4 model), tech talks, documentation. Review: regularly, revise when needed. Avoid: ivory tower, decision without context. Goal: transparency, knowledge sharing, future context.'
+		},
+		{
+			category: 'Architecture Decisions',
+			question: 'How do you evaluate new technologies for adoption?',
+			answer: 'Evaluate: production-ready (maturity), community/support, learning curve, licensing, integration, performance, security, longevity. Process: spike/POC, team feedback, architecture review, pilot project. Avoid: resume-driven development, shiny object syndrome, major rewrites. Consider: maintenance burden, team skills, existing ecosystem. Default: boring technology (proven).'
+		},
+		{
+			category: 'Cross-Functional',
+			question: 'How do you collaborate with product and business teams?',
+			answer: 'Communication: translate technical to business value, explain trade-offs, provide options (not just no), data-driven arguments. Understand: business goals, constraints, priorities. Contribute: feasibility, alternatives, technical opportunities. Avoid: jargon, gate-keeping, "not possible". Build: trust, credibility, partnership. Learn: domain knowledge, customer needs.'
+		},
+		{
+			category: 'Cross-Functional',
+			question: 'How do you handle pressure to cut corners for deadlines?',
+			answer: 'Approach: explain risks (outages, security, future cost), provide options (MVP scope, phased delivery), negotiate trade-offs (what can wait), document decisions. Push back: when risks unacceptable (security, data loss). Compromise: acceptable debt with plan. Track: promised fixes, resurface later. Build: trust through delivering, credibility. Sometimes: need to say no firmly.'
+		},
+		{
+			category: 'Team Dynamics',
+			question: 'How do you foster a culture of engineering excellence?',
+			answer: 'Culture: code reviews (learning), testing (quality), refactoring (maintainability), documentation (knowledge), automation (efficiency). Practices: tech talks, lunch & learns, innovation time, blameless post-mortems. Recognition: acknowledge good work, celebrate wins, learn from failures. Lead: by example, set standards, continuous improvement. Measure: code quality, cycle time, satisfaction.'
+		},
+		{
+			category: 'Team Dynamics',
+			question: 'How do you handle technical disagreements within the team?',
+			answer: 'Process: listen (understand perspectives), evidence-based (data, benchmarks), discuss trade-offs, consider context, seek consensus. Escalation: architect, tech lead, spike/POC. Decision: document rationale, time-box discussion, revisit if new information. Avoid: ego, authority override without reasoning, endless debate. Goal: best solution, team alignment, learning.'
+		},
+		{
+			category: 'Standards',
+			question: 'How do you establish and maintain coding standards?',
+			answer: 'Establish: team consensus, documented (wiki/repo), examples, automated linting/formatting. Cover: style, architecture patterns, error handling, logging, testing. Enforce: CI/CD checks, code reviews, pair programming. Evolve: regular review, retrospectives, industry best practices. Avoid: overly rigid, personal preferences. Goal: consistency, quality, onboarding.'
+		},
+		{
+			category: 'Standards',
+			question: 'What makes code "production-ready"?',
+			answer: 'Criteria: functionality (requirements met), testing (unit, integration, E2E), error handling (graceful degradation), logging (actionable), monitoring (alerts, dashboards), security (auth, validation, secrets), performance (meets SLOs), documentation (README, runbooks), reviewed (code review), deployable (CI/CD), observable (metrics, traces). Not: 100% coverage, perfect code. Balance: done vs over-engineered.'
+		},
+		{
+			category: 'Career Growth',
+			question: 'What distinguishes senior engineers from mid-level engineers?',
+			answer: 'Senior: system thinking (not just code), anticipate problems, influence without authority, mentor effectively, communicate technical to non-technical, make pragmatic trade-offs, reduce complexity, ship impact (not just tasks), handle ambiguity, improve team velocity. Mid-level: executes well, needs some guidance, growing system view. Technical skill is baseline, impact multiplier is difference.'
+		},
+		{
+			category: 'Career Growth',
+			question: 'How do you stay current with technology as a senior engineer?',
+			answer: 'Learn: blogs (weekly), conferences (yearly), open source (contribute), side projects, new features (C#/.NET releases), podcasts, books, courses. Filter: signal vs noise, focus on fundamentals (transferable), depth over breadth. Share: tech talks, blog posts, mentoring. Time: dedicated learning time, 20% rule. Balance: depth in core, breadth in adjacent. Avoid: chasing trends without purpose.'
+		}
 	]
 }
 
