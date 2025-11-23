@@ -304,6 +304,312 @@ export const questionSets = {
 			question: 'What is JWT and how does it work?',
 			answer: 'JWT (JSON Web Token) is a compact, self-contained token for authentication. Structure: header.payload.signature (Base64 encoded). Server signs token with secret, client includes in requests. Stateless (no server-side session storage). Vulnerable if secret compromised or token not validated properly.'
 		}
+	],
+	'C# Essentials': [
+		{
+			category: 'C# Basics',
+			question: 'What is the difference between value types and reference types in C#?',
+			answer: 'Value types (int, bool, struct) store data directly in memory (stack). Reference types (class, string, array) store a reference to data on the heap. Value types are copied when assigned, reference types copy the reference.'
+		},
+		{
+			category: 'C# Basics',
+			question: 'What is the difference between const and readonly?',
+			answer: 'const is compile-time constant, must be initialized at declaration, only works with primitive types. readonly can be assigned at runtime (in constructor), works with any type, value can differ per instance.'
+		},
+		{
+			category: 'C# Basics',
+			question: 'Explain the difference between == and Equals().',
+			answer: '== compares references for reference types (unless overloaded). Equals() compares values (can be overridden). For strings, both compare values because string overrides ==. Always use Equals() for value comparison.'
+		},
+		{
+			category: 'C# Basics',
+			question: 'What is boxing and unboxing?',
+			answer: 'Boxing converts a value type to object (allocates heap memory). Unboxing extracts value type from object. Example: int i = 5; object o = i; (boxing), int j = (int)o; (unboxing). Avoid for performance - use generics instead.'
+		},
+		{
+			category: 'C# OOP',
+			question: 'What are the four pillars of OOP?',
+			answer: 'Encapsulation (hide implementation details), Abstraction (simplify complexity), Inheritance (reuse code from base classes), Polymorphism (objects can take many forms via interfaces/overriding).'
+		},
+		{
+			category: 'C# OOP',
+			question: 'What is the difference between abstract class and interface?',
+			answer: 'Abstract class: can have implementation, constructors, fields, single inheritance. Interface: only signatures (C# 8+ allows default implementation), no state, multiple inheritance. Use interface for contracts, abstract for shared base functionality.'
+		},
+		{
+			category: 'C# OOP',
+			question: 'What is the difference between override and overload?',
+			answer: 'Override: redefines base class method with same signature (virtual/abstract required). Overload: multiple methods with same name but different parameters in same class. Override is runtime polymorphism, overload is compile-time.'
+		},
+		{
+			category: 'C# Collections',
+			question: 'What is the difference between Array, List, and ArrayList?',
+			answer: 'Array: fixed size, strongly typed, fastest. List<T>: dynamic size, strongly typed (generic), most common. ArrayList: dynamic size, stores objects (boxing), legacy - avoid in new code, use List<T> instead.'
+		},
+		{
+			category: 'C# Collections',
+			question: 'When would you use Dictionary vs List?',
+			answer: 'Use Dictionary<K,V> for key-value lookups (O(1) average), fast contains check, unique keys. Use List<T> for ordered sequences, index access, duplicates allowed, need to iterate in order.'
+		},
+		{
+			category: 'C# LINQ',
+			question: 'What is LINQ and why use it?',
+			answer: 'LINQ (Language Integrated Query) provides unified syntax to query collections, databases, XML. Benefits: readable code, compile-time checking, IntelliSense support. Two syntax: query (SQL-like) and method (lambda). Example: list.Where(x => x > 5).Select(x => x * 2)'
+		},
+		{
+			category: 'C# LINQ',
+			question: 'What is the difference between First() and FirstOrDefault()?',
+			answer: 'First() throws exception if no elements found. FirstOrDefault() returns default value (null for reference types, 0 for int, etc). Use FirstOrDefault() when element might not exist to avoid exceptions.'
+		},
+		{
+			category: 'C# Async',
+			question: 'What is async/await and when should you use it?',
+			answer: 'async/await enables asynchronous programming without blocking threads. Use for I/O operations (database, file, HTTP). async marks method, await suspends execution until task completes. Improves scalability by freeing threads while waiting.'
+		},
+		{
+			category: 'C# Async',
+			question: 'What is the difference between Task and Thread?',
+			answer: 'Thread is OS-level, heavyweight, manual management. Task is higher-level abstraction, uses thread pool, supports async/await, lightweight. Tasks are composable and return values. Always prefer Task over Thread for async work.'
+		},
+		{
+			category: 'C# Memory',
+			question: 'What is the difference between Stack and Heap?',
+			answer: 'Stack: stores value types and references, automatic cleanup, fast, LIFO, limited size. Heap: stores reference type objects, garbage collected, slower, larger. Local variables go on stack, objects created with "new" go on heap.'
+		},
+		{
+			category: 'C# Memory',
+			question: 'What is garbage collection in C#?',
+			answer: 'GC automatically frees memory of objects no longer referenced. Uses generations (0, 1, 2) - newer objects collected more frequently. Gen 0: short-lived, Gen 2: long-lived. Can force with GC.Collect() but usually not recommended.'
+		},
+		{
+			category: 'C# Features',
+			question: 'What are nullable types?',
+			answer: 'Nullable types allow value types to be null. Syntax: int? or Nullable<int>. Check with HasValue property or == null. C# 8+ added nullable reference types to catch null reference bugs at compile time.'
+		},
+		{
+			category: 'C# Features',
+			question: 'What is the var keyword?',
+			answer: 'var uses implicit typing - compiler infers type from assigned value. Still strongly typed (not dynamic). Must initialize at declaration. Use for readability with complex types like Dictionary<string, List<int>>. Avoid when type isn\'t obvious.'
+		},
+		{
+			category: 'C# Features',
+			question: 'What are extension methods?',
+			answer: 'Extension methods add methods to existing types without modifying them. Must be static method in static class, first parameter uses "this" keyword. Example: public static bool IsEven(this int num) => num % 2 == 0; Usage: 5.IsEven()'
+		},
+		{
+			category: 'C# Delegates',
+			question: 'What is a delegate?',
+			answer: 'Delegate is a type-safe function pointer that references methods. Enables callbacks and event handling. Example: delegate int MathOp(int x, int y). Can be multicast (invoke multiple methods). Built-in: Action (no return), Func (returns value).'
+		},
+		{
+			category: 'C# Delegates',
+			question: 'What is the difference between Action, Func, and Predicate?',
+			answer: 'Action: delegate with no return value (void), up to 16 parameters. Func: delegate that returns a value, last type parameter is return type. Predicate: Func<T, bool> - specifically returns bool, used for filtering.'
+		}
+	],
+	'.NET Fundamentals': [
+		{
+			category: '.NET Basics',
+			question: 'What is .NET and what are its components?',
+			answer: '.NET is a development platform. Components: CLR (Common Language Runtime - executes code), BCL (Base Class Library - built-in types/utilities), compilers (C#, F#, VB), runtime (manages memory, security). Modern: .NET Core/.NET 5+ (cross-platform).'
+		},
+		{
+			category: '.NET Basics',
+			question: 'What is the CLR?',
+			answer: 'Common Language Runtime executes .NET code. Manages memory (GC), type safety, exception handling, thread management. Compiles IL (Intermediate Language) to native code via JIT (Just-In-Time) compilation. Provides cross-language interoperability.'
+		},
+		{
+			category: '.NET Basics',
+			question: 'What is the difference between .NET Framework and .NET Core/.NET 5+?',
+			answer: '.NET Framework: Windows-only, legacy, full-featured but heavy. .NET Core/.NET 5+: cross-platform (Windows, Linux, Mac), open-source, modular, better performance, actively developed. Use .NET 5+ for new projects.'
+		},
+		{
+			category: '.NET Basics',
+			question: 'What is NuGet?',
+			answer: 'NuGet is .NET\'s package manager for sharing and consuming libraries. Like npm for Node.js. Hosts packages on nuget.org. Use in Visual Studio or dotnet CLI. Packages defined in .csproj file. Essential for dependency management.'
+		},
+		{
+			category: 'Dependency Injection',
+			question: 'What is Dependency Injection and why use it?',
+			answer: 'DI provides dependencies from outside rather than creating them internally. Benefits: loose coupling, easier testing (mock dependencies), better maintainability. .NET has built-in DI container. Register services in Startup/Program, inject via constructor.'
+		},
+		{
+			category: 'Dependency Injection',
+			question: 'What are the DI service lifetimes in .NET?',
+			answer: 'Transient: new instance every request. Scoped: one instance per HTTP request/scope. Singleton: one instance for app lifetime. Choose based on state: Transient for stateless, Scoped for per-request data (like DbContext), Singleton for shared state/caches.'
+		},
+		{
+			category: 'Configuration',
+			question: 'How does configuration work in .NET?',
+			answer: 'Uses appsettings.json for settings, can have environment-specific files (appsettings.Development.json). Access via IConfiguration injection. Supports environment variables, command-line args. Use Options pattern (IOptions<T>) for strongly-typed configuration.'
+		},
+		{
+			category: 'Logging',
+			question: 'How do you implement logging in .NET?',
+			answer: 'Use ILogger<T> interface (built-in). Inject via DI. Log levels: Trace, Debug, Info, Warning, Error, Critical. Configure providers in appsettings.json (Console, File, Application Insights). Example: _logger.LogInformation("User {UserId} logged in", userId)'
+		},
+		{
+			category: 'Error Handling',
+			question: 'What is middleware in .NET?',
+			answer: 'Middleware are components in the request pipeline that handle requests/responses. Order matters - executes in sequence. Each can process request, call next middleware, or short-circuit. Examples: authentication, error handling, logging, routing. Configure in Program.cs.'
+		},
+		{
+			category: 'Error Handling',
+			question: 'How do you handle exceptions in .NET APIs?',
+			answer: 'Use exception middleware (app.UseExceptionHandler) for global handling. Return appropriate HTTP status codes (400 for validation, 404 for not found, 500 for server error). Create custom exception types. Log exceptions. Use ProblemDetails for consistent error responses.'
+		},
+		{
+			category: 'Testing',
+			question: 'What testing frameworks are used in .NET?',
+			answer: 'xUnit (most popular for new projects), NUnit, MSTest (Microsoft\'s). Use Moq or NSubstitute for mocking. FluentAssertions for readable assertions. Arrange-Act-Assert pattern. TestServer for integration testing APIs.'
+		},
+		{
+			category: 'Testing',
+			question: 'What is the difference between unit tests and integration tests?',
+			answer: 'Unit tests: test single method/class in isolation, mock dependencies, fast, no external resources. Integration tests: test multiple components together, use real dependencies (database, HTTP), slower, verify end-to-end behavior. Both important.'
+		},
+		{
+			category: 'Entity Framework',
+			question: 'What is Entity Framework Core?',
+			answer: 'EF Core is an ORM (Object-Relational Mapper) for .NET. Maps C# classes to database tables. Supports LINQ queries, change tracking, migrations. Code-first or database-first approach. Supports SQL Server, PostgreSQL, SQLite, etc.'
+		},
+		{
+			category: 'Entity Framework',
+			question: 'What is DbContext in Entity Framework?',
+			answer: 'DbContext represents a session with database. Manages entity objects, tracks changes, executes queries. Contains DbSet<T> properties for each entity. Register as Scoped service (one per request). Dispose properly or use "using" statement.'
+		},
+		{
+			category: 'Performance',
+			question: 'How do you improve .NET application performance?',
+			answer: 'Use async/await for I/O, cache frequently-used data, use IMemoryCache or distributed cache, optimize database queries (indexing, avoid N+1), use projection (select only needed fields), implement pagination, use compiled queries, profile with tools like dotnet-trace.'
+		},
+		{
+			category: 'Security',
+			question: 'What is CORS and how do you configure it in .NET?',
+			answer: 'CORS (Cross-Origin Resource Sharing) allows web pages to request resources from different domains. Configure in Program.cs: add CORS policy with allowed origins, methods, headers. Use app.UseCors(). Required for APIs consumed by frontend on different domain.'
+		},
+		{
+			category: 'API Design',
+			question: 'What are the HTTP verbs and when to use them?',
+			answer: 'GET: retrieve data (idempotent). POST: create new resource. PUT: update entire resource (idempotent). PATCH: partial update. DELETE: remove resource (idempotent). GET/PUT/DELETE should be idempotent - multiple identical requests have same effect.'
+		},
+		{
+			category: 'API Design',
+			question: 'What is model validation in .NET?',
+			answer: 'Use Data Annotations ([Required], [StringLength], [Range]) on model properties. ASP.NET automatically validates. Check ModelState.IsValid in controller. Return 400 BadRequest with validation errors. Can create custom validation attributes for complex rules.'
+		},
+		{
+			category: 'Authentication',
+			question: 'What is JWT authentication in .NET?',
+			answer: 'JWT is token-based authentication. User logs in, server generates JWT with claims, client includes token in Authorization header. Configure in Program.cs with AddAuthentication/AddJwtBearer. Use [Authorize] attribute to protect endpoints. Token contains user info (claims).'
+		},
+		{
+			category: 'Best Practices',
+			question: 'What is the Repository Pattern?',
+			answer: 'Repository Pattern abstracts data access logic from business logic. Create interface (IRepository) with CRUD methods, implement with concrete class. Benefits: easier testing (mock repo), swap data sources, centralize data access logic. Often used with Unit of Work pattern.'
+		}
+	],
+	'ASP.NET Core': [
+		{
+			category: 'ASP.NET Basics',
+			question: 'What is ASP.NET Core?',
+			answer: 'ASP.NET Core is a cross-platform, high-performance framework for building web apps and APIs. Open-source, modular, supports dependency injection, middleware pipeline. Used for MVC apps, Web APIs, Blazor (SPA), Razor Pages.'
+		},
+		{
+			category: 'ASP.NET Basics',
+			question: 'What is the difference between MVC and Web API?',
+			answer: 'MVC: returns views (HTML), uses Razor, for server-rendered web apps. Web API: returns data (JSON/XML), RESTful, for building APIs consumed by clients (mobile, SPA). Both use similar patterns (controllers, routing). API uses [ApiController] attribute.'
+		},
+		{
+			category: 'Controllers',
+			question: 'What is a Controller in ASP.NET Core?',
+			answer: 'Controller handles HTTP requests, contains action methods that return responses. Inherits from ControllerBase (API) or Controller (MVC). Use route attributes ([Route], [HttpGet]) to define endpoints. Injected with dependencies via constructor.'
+		},
+		{
+			category: 'Controllers',
+			question: 'What is the [ApiController] attribute?',
+			answer: '[ApiController] enables API-specific behaviors: automatic model validation (returns 400 if invalid), infers parameter binding sources ([FromBody], [FromQuery]), binds responses to ProblemDetails format. Apply to controller class.'
+		},
+		{
+			category: 'Routing',
+			question: 'How does routing work in ASP.NET Core?',
+			answer: 'Routing maps URLs to controller actions. Two types: Convention-based (defined in Program.cs) and Attribute routing ([Route("api/[controller]")]). Parameters in route: {id}. Supports constraints: {id:int}. Order matters for overlapping routes.'
+		},
+		{
+			category: 'Routing',
+			question: 'What is the difference between [FromBody], [FromQuery], and [FromRoute]?',
+			answer: '[FromBody]: reads from request body (JSON for POST/PUT). [FromQuery]: reads from URL query string (?name=value). [FromRoute]: reads from URL path ({id}). [FromHeader]: reads from HTTP headers. [ApiController] infers these automatically.'
+		},
+		{
+			category: 'Action Results',
+			question: 'What are common action result types?',
+			answer: 'Ok(data) - 200, Created(uri, data) - 201, NoContent() - 204, BadRequest() - 400, NotFound() - 404, Unauthorized() - 401, StatusCode(code). Return IActionResult or ActionResult<T> for flexibility. Use specific results for semantic meaning.'
+		},
+		{
+			category: 'Middleware',
+			question: 'What is the ASP.NET Core middleware pipeline?',
+			answer: 'Request flows through middleware in order, each can process request/response. Common middleware: UseRouting, UseAuthentication, UseAuthorization, UseEndpoints. Add custom with app.Use(). Order matters: auth before endpoints, exception handler first.'
+		},
+		{
+			category: 'Middleware',
+			question: 'How do you create custom middleware?',
+			answer: 'Create class with InvokeAsync(HttpContext context, RequestDelegate next) method. Process request, call await next(context), process response. Register with app.UseMiddleware<T>() or create extension method. Use for logging, request modification, custom auth.'
+		},
+		{
+			category: 'Filters',
+			question: 'What are filters in ASP.NET Core?',
+			answer: 'Filters run code before/after action execution. Types: Authorization, Resource, Action, Exception, Result filters. Apply via attributes ([Authorize], [ValidateModel]) or globally. Use for cross-cutting concerns like logging, validation, error handling.'
+		},
+		{
+			category: 'Model Binding',
+			question: 'What is model binding?',
+			answer: 'Model binding automatically maps HTTP request data to action method parameters. Sources: route data, query string, form data, body. Use [Bind] to control which properties bind. Complex types from body, simple types from query/route.'
+		},
+		{
+			category: 'Model Validation',
+			question: 'How do you validate models in ASP.NET Core?',
+			answer: 'Use Data Annotations on model properties. [ApiController] automatically validates and returns 400 if invalid. Manually check ModelState.IsValid. Custom validation with ValidationAttribute. Use FluentValidation library for complex scenarios.'
+		},
+		{
+			category: 'Startup',
+			question: 'What is the Program.cs file?',
+			answer: 'Program.cs (minimal hosting in .NET 6+) configures services and middleware. Replaces old Startup.cs. Register services with builder.Services.Add*, configure pipeline with app.Use*. Entry point of application. Sets up DI, routing, auth, etc.'
+		},
+		{
+			category: 'Startup',
+			question: 'What is the difference between ConfigureServices and Configure?',
+			answer: 'Legacy (.NET 5-): ConfigureServices registers services for DI. Configure sets up middleware pipeline. .NET 6+ uses Program.cs: builder.Services for services, app.Use for middleware. Services registered before app built, middleware after.'
+		},
+		{
+			category: 'API Versioning',
+			question: 'How do you implement API versioning?',
+			answer: 'Use Microsoft.AspNetCore.Mvc.Versioning package. Methods: URL path (/api/v1/users), query string (?api-version=1.0), header (api-version: 1.0). Configure in Program.cs with AddApiVersioning. Use [ApiVersion("1.0")] on controllers. Supports deprecated versions.'
+		},
+		{
+			category: 'Content Negotiation',
+			question: 'What is content negotiation?',
+			answer: 'Client specifies desired format via Accept header (application/json, application/xml). Server returns data in requested format. ASP.NET Core supports JSON by default. Add XML with AddXmlSerializerFormatters(). Can create custom formatters.'
+		},
+		{
+			category: 'Response Caching',
+			question: 'How do you implement caching in ASP.NET Core?',
+			answer: 'Response caching: [ResponseCache] attribute with duration. In-memory caching: IMemoryCache for server-side. Distributed caching: IDistributedCache with Redis/SQL Server for multi-server. Output caching (.NET 7+): app.UseOutputCache() for whole responses.'
+		},
+		{
+			category: 'Swagger',
+			question: 'What is Swagger/OpenAPI in ASP.NET Core?',
+			answer: 'Swagger generates interactive API documentation. Use Swashbuckle.AspNetCore package. Configure in Program.cs with AddSwaggerGen/UseSwagger. Accesses via /swagger endpoint. Documents endpoints, parameters, responses. Use XML comments for descriptions.'
+		},
+		{
+			category: 'Background Tasks',
+			question: 'How do you run background tasks in ASP.NET Core?',
+			answer: 'Use IHostedService or BackgroundService (inherits IHostedService). Register as hosted service in Program.cs. Override ExecuteAsync for long-running work. Use for periodic tasks, queue processing. For complex scenarios, use Hangfire or Quartz.NET.'
+		},
+		{
+			category: 'SignalR',
+			question: 'What is SignalR?',
+			answer: 'SignalR enables real-time, bi-directional communication between server and clients. Uses WebSockets when available, falls back to long polling. Create Hub class with methods clients can call. Clients subscribe to receive server messages. Use for chat, notifications, live updates.'
+		}
 	]
 }
 
