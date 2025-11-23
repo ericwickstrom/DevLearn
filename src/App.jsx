@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Flashcard from './components/Flashcard'
 import TopicSelector from './components/TopicSelector'
-import { questionSets } from './data/questions'
+import { questionSets } from './data/questions/index'
 
 function App() {
 	const topics = Object.keys(questionSets)
