@@ -11,6 +11,11 @@ import dotnetExpert from './dotnet-expert.js'
 import systemDesignSenior from './system-design-senior.js'
 import leadership from './leadership.js'
 import softwareEngineeringFundamentals from './software-engineering-fundamentals.js'
+import az900CloudConcepts from './az900-cloud-concepts.js'
+import az900Architecture from './az900-architecture.js'
+import az900CoreServices from './az900-core-services.js'
+import az900Security from './az900-security.js'
+import az900Pricing from './az900-pricing.js'
 
 export const questionSets = {
 	'General Interview Prep': general,
@@ -25,7 +30,12 @@ export const questionSets = {
 	'Performance & Optimization (Mid-Level)': performanceOptimization,
 	'.NET Expert (Senior-Level)': dotnetExpert,
 	'System Design & Architecture (Senior-Level)': systemDesignSenior,
-	'Leadership & Best Practices (Senior-Level)': leadership
+	'Leadership & Best Practices (Senior-Level)': leadership,
+	'AZ-900 - Cloud Concepts': az900CloudConcepts,
+	'AZ-900 - Azure Architecture': az900Architecture,
+	'AZ-900 - Core Services': az900CoreServices,
+	'AZ-900 - Security & Compliance': az900Security,
+	'AZ-900 - Pricing & Support': az900Pricing
 }
 
 // Backward compatibility
