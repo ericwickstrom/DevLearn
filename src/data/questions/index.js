@@ -10,9 +10,11 @@ import performanceOptimization from './performance-optimization.js'
 import dotnetExpert from './dotnet-expert.js'
 import systemDesignSenior from './system-design-senior.js'
 import leadership from './leadership.js'
+import softwareEngineeringFundamentals from './software-engineering-fundamentals.js'
 
 export const questionSets = {
 	'General Interview Prep': general,
+	'Software Engineering Fundamentals': softwareEngineeringFundamentals,
 	'Python Essentials': python,
 	'System Design Deep Dive': systemDesign,
 	'C# Essentials': csharp,
