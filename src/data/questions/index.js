@@ -11,6 +11,7 @@ import dotnetExpert from './dotnet-expert.js'
 import systemDesignSenior from './system-design-senior.js'
 import leadership from './leadership.js'
 import softwareEngineeringFundamentals from './software-engineering-fundamentals.js'
+import react from './react.js'
 import az900CloudConcepts from './az900-cloud-concepts.js'
 import az900Architecture from './az900-architecture.js'
 import az900CoreServices from './az900-core-services.js'
@@ -21,6 +22,7 @@ export const questionSets = {
 	'General Interview Prep': general,
 	'Software Engineering Fundamentals': softwareEngineeringFundamentals,
 	'Python Essentials': python,
+	'React Essentials': react,
 	'System Design Deep Dive': systemDesign,
 	'C# Essentials': csharp,
 	'.NET Fundamentals': dotnetFundamentals,
