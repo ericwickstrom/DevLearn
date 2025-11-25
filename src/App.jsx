@@ -38,6 +38,7 @@ function App() {
 
 			<main>
 				<Flashcard
+					key={currentIndex}
 					question={currentQuestions[currentIndex].question}
 					answer={currentQuestions[currentIndex].answer}
 					category={currentQuestions[currentIndex].category}
