@@ -1,8 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Flashcard.css'
 
 function Flashcard({ question, answer, category }) {
 	const [isFlipped, setIsFlipped] = useState(false)
+	const [isAnimating, setIsAnimating] = useState(true)
+
+	useEffect(() => {
+		// Trigger entrance animation on mount
+		setIsAnimating(true)
+		const timer = setTimeout(() => setIsAnimating(false), 600)
+		return () => clearTimeout(timer)
+	}, [])
 
 	const handleFlip = () => {
 		setIsFlipped(!isFlipped)
@@ -12,7 +20,7 @@ function Flashcard({ question, answer, category }) {
 		<div className="flashcard-container">
 			<div className="category-tag">{category}</div>
 			<div
-				className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+				className={`flashcard ${isFlipped ? 'flipped' : ''} ${isAnimating ? 'animating' : ''}`}
 				onClick={handleFlip}
 			>
 				<div className="flashcard-inner">
